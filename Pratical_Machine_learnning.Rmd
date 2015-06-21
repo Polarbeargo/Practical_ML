@@ -1,6 +1,6 @@
 ---
 title: "Practical_Machine_Leatnning"
-author: "Hsin-Wen Chang"
+author: "Alice Chang"
 date: "Sunday, June 21, 2015"
 output: html_document
 ---
