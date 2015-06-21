@@ -1,0 +1,102 @@
+---
+title: "Practical_Machine_Leatnning"
+author: "Hsin-Wen Chang"
+date: "Sunday, June 21, 2015"
+output: html_document
+---
+
+```{r, echo=FALSE}
+message(sprintf("Run time: %s\nR version: %s", Sys.time(), R.Version()$version.string))
+```
+
+> **Background**
+
+> Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. 
+==========================================================
+> **What you should submit**
+
+> The goal of your project is to predict the manner in which they did the exercise. This is the "classe" variable in the training set. You may use any of the other variables to predict with. You should create a report describing how you built your model, how you used cross validation, what you think the expected out of sample error is, and why you made the choices you did. You will also use your prediction model to predict 20 different test cases. 
+
+> 1. Your submission should consist of a link to a Github repo with your R markdown and compiled HTML file describing your analysis. Please constrain the text of the writeup to < 2000 words and the number of figures to be less than 5. It will make it easier for the graders if you submit a repo with a gh-pages branch so the HTML page can be viewed online (and you always want to make it easy on graders :-).
+> 2. You should also apply your machine learning algorithm to the 20 test cases available in the test data above. Please submit your predictions in appropriate format to the programming assignment for automated grading. See the programming assignment for additional details. 
+
+> **Reproducibility **
+
+> Due to security concerns with the exchange of R code, your code will not be run during the evaluation by your classmates. Please be sure that if they download the repo, they will be able to view the compiled HTML version of your analysis. 
+
+I  use  caret and randomForest, this allowed me to generate correct answers for
+each of the 20 test data cases provided in this assignment and use a seed value for consistent results.
+
+> **Data **
+
+> The training data for this project are available here: 
+> Some values contained a "#DIV/0!" which  replaced with an NA value.
+
+```{r}
+training_data <- read.csv("pml-training.csv", na.strings=c("#DIV/0!") )
+evaluation_data <- read.csv("pml-testing.csv", na.strings=c("#DIV/0!") )
+```
+Any features that contained NA values were removed.
+
+
+The following fields removed included:
+
+* the unlabled row index
+* `user_name`
+* `raw_timestamp_part_1`
+* `raw_timestamp_part_2`
+* `cvtd_timestamp`
+* `new_window`
+* `num_window`
+## Cross Validation
+
+Cross validation was achieved by splitting the training data into a test set and a training set using the following:
+
+```{r cross_validate}
+in.train <- createDataPartition(training.features$classe, p=.60, list=FALSE)
+
+train <- training.features[in.train[,1]]
+test <- training.features[-in.train[,1]]
+```
+## Prediction
+
+The random forest model was initially used to prediction.
+
+```{r train, echo=F}
+model.rf <- train(y=as.factor(train$classe), x=train[,!"classe",with=F], tuneGrid=data.frame(mtry=3), trControl=trainControl(method="none"), method="parRF")
+```
+
+```{r confusion_matrix, echo=F}
+confusionMatrix(predict(model.rf, newdata=transform.features(test)), factor(test$classe))
+```
+
+It's estimated that the out of sample error would reflect the Kappa statistic of `r confusionMatrix(predict(model.rf, newdata=transform.features(test)), factor(test$classe))$overall["Kappa"]`.
+
+### Variable Importance
+
+```{r variable_importance, echo=F}
+print(plot(varImp(model.rf, scale = FALSE)))
+```
+Prepare the submission. (using COURSERA provided code)
+
+```{r}
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+
+
+x <- evaluation_data
+x <- x[feature_set[feature_set!='classe']]
+answers <- predict(rf, newdata=x)
+
+answers
+
+pml_write_files(answers)
+```
+Conclusions and Test Data Submit
+--------------------------------
+The random forest algorithm appears to perform very well for predicting activities from accelerometers measurements.
