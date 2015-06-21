@@ -23,6 +23,13 @@ each of the 20 test data cases provided in this assignment and use a seed value 
 training_data <- read.csv("pml-training.csv", na.strings=c("#DIV/0!") )
 test_data <- read.csv("pml-testing.csv", na.strings=c("#DIV/0!") )
 ```
+Determine and display out feature set.
+
+```{r}
+feature_set <- colnames(training_data[colSums(is.na(training_data)) == 0])[-(1:7)]
+model_data <- training_data[feature_set]
+feature_set
+```
 ## Cross Validation
 
 Cross validation was achieved by splitting the training data into a test set and a training set using the following:
