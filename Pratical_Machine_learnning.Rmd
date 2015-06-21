@@ -48,6 +48,7 @@ The following fields removed included:
 * `cvtd_timestamp`
 * `new_window`
 * `num_window`
+
 ## Cross Validation
 
 Cross validation was achieved by splitting the training data into a test set and a training set using the following:
