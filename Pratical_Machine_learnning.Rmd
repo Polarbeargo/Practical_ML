@@ -21,7 +21,7 @@ each of the 20 test data cases provided in this assignment and use a seed value 
 
 ```{r}
 training_data <- read.csv("pml-training.csv", na.strings=c("#DIV/0!") )
-evaluation_data <- read.csv("pml-testing.csv", na.strings=c("#DIV/0!") )
+test_data <- read.csv("pml-testing.csv", na.strings=c("#DIV/0!") )
 ```
 ## Cross Validation
 
