@@ -63,7 +63,7 @@ confusionMatrix(predict(model.rf, newdata=transform.features(test)), factor(test
 It's estimated that the out of sample error would reflect the Kappa statistic of `r confusionMatrix(predict(model.rf, newdata=transform.features(test)), factor(test$classe))$overall["Kappa"]`.
 
 
-##Prepare the submission. (using COURSERA provided code)
+##Prepare the submission.
 
 ```{r}
 pml_write_files = function(x){
