@@ -100,4 +100,4 @@ pml_write_files(answers)
 ```
 Conclusions and Test Data Submit
 --------------------------------
-The random forest algorithm appears to perform very well for predicting activities from accelerometers measurements.
+The random forest algorithm appears to perform  well predicting activities from accelerometers measurements.
