@@ -1,13 +1,4 @@
----
-title: "Practical_Machine_Leatnning"
-author: "Alice Chang"
-date: "Sunday, June 21, 2015"
-output: html_document
----
-
-```{r, echo=FALSE}
-message(sprintf("Run time: %s\nR version: %s", Sys.time(), R.Version()$version.string))
-```
+##Practical Machine Leatnning
 ==========================================================
 > **What you should submit**
 
