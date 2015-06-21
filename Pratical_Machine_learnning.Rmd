@@ -42,6 +42,12 @@ in.train <- createDataPartition(training.features$classe, p=.60, list=FALSE)
 train <- training.features[in.train[,1]]
 test <- training.features[-in.train[,1]]
 ```
+
+### Variable Importance
+
+```{r variable_importance, echo=F}
+print(plot(varImp(model.rf, scale = FALSE)))
+```
 ## Prediction
 
 The random forest model was initially used to prediction.
@@ -56,12 +62,8 @@ confusionMatrix(predict(model.rf, newdata=transform.features(test)), factor(test
 
 It's estimated that the out of sample error would reflect the Kappa statistic of `r confusionMatrix(predict(model.rf, newdata=transform.features(test)), factor(test$classe))$overall["Kappa"]`.
 
-### Variable Importance
 
-```{r variable_importance, echo=F}
-print(plot(varImp(model.rf, scale = FALSE)))
-```
-Prepare the submission. (using COURSERA provided code)
+##Prepare the submission. (using COURSERA provided code)
 
 ```{r}
 pml_write_files = function(x){
