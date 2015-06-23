@@ -35,7 +35,7 @@ feature_set
 Cross validation was achieved by splitting the training data into a test set and a training set using the following:
 
 ```{r cross_validate}
-in.train <- createDataPartition(training.features$classe, p=.60, list=FALSE)
+in.train <- createDataPartition(training.features$classe, p=.70, list=FALSE)
 
 train <- training.features[in.train[,1]]
 test <- training.features[-in.train[,1]]
@@ -46,21 +46,9 @@ test <- training.features[-in.train[,1]]
 ```{r variable_importance, echo=F}
 print(plot(varImp(model.rf, scale = FALSE)))
 ```
-## Prediction
-
-The random forest model was initially used to prediction.
-
-```{r train, echo=F}
-model.rf <- train(y=as.factor(train$classe), x=train[,!"classe",with=F], tuneGrid=data.frame(mtry=3), trControl=trainControl(method="none"), method="parRF")
-```
-
 ```{r confusion_matrix, echo=F}
 confusionMatrix(predict(model.rf, newdata=transform.features(test)), factor(test$classe))
 ```
-
-It's estimated that the out of sample error would reflect the Kappa statistic of `r confusionMatrix(predict(model.rf, newdata=transform.features(test)), factor(test$classe))$overall["Kappa"]`.
-
-
 ##Prepare the submission.
 
 ```{r}
@@ -81,6 +69,3 @@ answers
 
 pml_write_files(answers)
 ```
-Conclusions
---------------------------------
-The random forest algorithm appears to perform  well predicting accelerometers measurements.
